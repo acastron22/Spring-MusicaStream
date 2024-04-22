@@ -25,4 +25,6 @@ public class Banda {
         this.resumo = dados.resumo();
         this.estilo = dados.estilo();
     }
+    
+
 }

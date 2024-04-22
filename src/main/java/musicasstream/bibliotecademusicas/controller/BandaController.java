@@ -1,16 +1,15 @@
 package musicasstream.bibliotecademusicas.controller;
 
-import musicasstream.bibliotecademusicas.Modelos.Bandas.Banda;
-import musicasstream.bibliotecademusicas.Modelos.Bandas.BandaRepository;
-import musicasstream.bibliotecademusicas.Modelos.Bandas.DadosCadastroBanda;
+import musicasstream.bibliotecademusicas.Modelos.Bandas.*;
 
-import musicasstream.bibliotecademusicas.Modelos.Bandas.Estilo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bandas")
@@ -24,5 +23,10 @@ public class BandaController {
     public void criarBanda(@RequestBody DadosCadastroBanda dados){
          
         repository.save(new Banda(dados));
+    }
+    
+    @GetMapping
+    public Page<DadosListagemBanda> listaDeBandas(@PageableDefault(size = 1) Pageable paginacao){
+        return repository.findAll(paginacao).map(DadosListagemBanda::new);
     }
 }
