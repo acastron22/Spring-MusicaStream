@@ -9,8 +9,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/bandas")
 public class BandaController {
@@ -26,7 +24,14 @@ public class BandaController {
     }
     
     @GetMapping
-    public Page<DadosListagemBanda> listaDeBandas(@PageableDefault(size = 1) Pageable paginacao){
+    public Page<DadosListagemBanda> listaDeBandas(Pageable paginacao){
         return repository.findAll(paginacao).map(DadosListagemBanda::new);
+    }
+    
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody DadosAtualizarBanda dados){
+        var banda = repository.getReferenceById(dados.id());
+        banda.atualizarBanda(dados);
     }
 }

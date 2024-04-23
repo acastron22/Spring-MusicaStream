@@ -1,0 +1,2 @@
+ALTER TABLE bandas
+    ADD COLUMN estilo VARCHAR(100) NOT NULL;

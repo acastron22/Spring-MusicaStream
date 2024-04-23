@@ -3,8 +3,6 @@ package musicasstream.bibliotecademusicas.Modelos.Bandas;
 import jakarta.persistence.*;
 import lombok.*;
 
-import javax.naming.Name;
-
 @Table(name = "bandas")
 @Entity(name = "Banda")
 @Getter
@@ -25,6 +23,17 @@ public class Banda {
         this.resumo = dados.resumo();
         this.estilo = dados.estilo();
     }
-    
 
+
+    public void atualizarBanda(DadosAtualizarBanda dados) {
+        
+        if(dados.resumo() != null){
+        this.resumo = dados.resumo();
+        }
+
+        if(dados.estilo() != null){
+            
+        this.estilo = dados.estilo();
+        }
+    }
 }
