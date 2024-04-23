@@ -17,11 +17,13 @@ public class Banda {
     private String resumo;
     @Enumerated(EnumType.STRING)
     private Estilo estilo;
+    private Boolean excluido;
 
     public Banda(DadosCadastroBanda dados) {
         this.nome = dados.nome();
         this.resumo = dados.resumo();
         this.estilo = dados.estilo();
+        this.excluido = false;
     }
 
 
@@ -35,5 +37,9 @@ public class Banda {
             
         this.estilo = dados.estilo();
         }
+    }
+    
+    public void excluirBanda() {
+        this.excluido = true;
     }
 }

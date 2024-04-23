@@ -25,7 +25,7 @@ public class BandaController {
     
     @GetMapping
     public Page<DadosListagemBanda> listaDeBandas(Pageable paginacao){
-        return repository.findAll(paginacao).map(DadosListagemBanda::new);
+        return repository.findAllByExcluidoFalse(paginacao).map(DadosListagemBanda::new);
     }
     
     @PutMapping
@@ -33,5 +33,13 @@ public class BandaController {
     public void atualizar(@RequestBody DadosAtualizarBanda dados){
         var banda = repository.getReferenceById(dados.id());
         banda.atualizarBanda(dados);
+    }
+    
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void excluir(@PathVariable Long id){
+        var banda = repository.getReferenceById(id);
+        
+        banda.excluirBanda();
     }
 }

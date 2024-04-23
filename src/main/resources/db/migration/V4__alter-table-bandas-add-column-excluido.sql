@@ -1,2 +1,3 @@
 ALTER TABLE bandas
-    ADD COLUMN estilo VARCHAR(100) NOT NULL;
+    ADD excluido BOOLEAN DEFAULT FALSE NOT NULL;
+UPDATE bandas SET excluido = FALSE;
