@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.Modelos.Bandas;
+package musicasstream.bibliotecademusicas.Modelos.Banda;
 
 public record DadosCadastroBanda(String nome, String resumo, Estilo estilo) {
 }

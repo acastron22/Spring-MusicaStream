@@ -1,6 +1,4 @@
-package musicasstream.bibliotecademusicas.Modelos.Bandas;
-
-import javax.swing.plaf.metal.MetalDesktopIconUI;
+package musicasstream.bibliotecademusicas.Modelos.Banda;
 
 public record DadosListagemBanda(Long id, String nome, Estilo estilo) {
 
