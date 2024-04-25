@@ -1,7 +1,7 @@
 package musicasstream.bibliotecademusicas.controller.Banda;
 
-import musicasstream.bibliotecademusicas.Modelos.Banda.*;
-
+import jakarta.validation.Valid;
+import musicasstream.bibliotecademusicas.domain.Modelos.Banda.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +17,23 @@ public class BandaController {
     @Autowired
     private BandaRepository repository;
 
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemBanda>> listaDeBandas(Pageable paginacao){
+
+
+        var  page = repository.findAllByExcluidoFalse(paginacao).map(DadosListagemBanda::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity BandaEspecifica(@PathVariable Long id){
+        var banda = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoBanda(banda));
+    }
+
     @PostMapping
     @Transactional
-    public ResponseEntity criarBanda(@RequestBody DadosCadastroBanda dados, 
+    public ResponseEntity criarBanda(@RequestBody @Valid DadosCadastroBanda dados, 
                                      UriComponentsBuilder uriBuilder){
          var banda = new Banda(dados);
         repository.save(banda);
@@ -29,19 +43,7 @@ public class BandaController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoBanda(banda));
     }
     
-    @GetMapping
-    public ResponseEntity<Page<DadosListagemBanda>> listaDeBandas(Pageable paginacao){
-        
-        
-        var  page = repository.findAllByExcluidoFalse(paginacao).map(DadosListagemBanda::new);        
-        return ResponseEntity.ok(page);
-    }
 
-    @GetMapping("/{id}")    
-    public ResponseEntity BandaEspecifica(@PathVariable Long id){
-        var banda = repository.getReferenceById(id);
-        return ResponseEntity.ok(new DadosDetalhamentoBanda(banda));
-    }
     
     @PutMapping
     @Transactional
