@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.Modelos.Banda;
+package musicasstream.bibliotecademusicas.domain.Modelos.Banda;
 
 public enum Estilo {
     ROCK, MPB, POP, BOSSA, SAMBA, PAGODE, METAL

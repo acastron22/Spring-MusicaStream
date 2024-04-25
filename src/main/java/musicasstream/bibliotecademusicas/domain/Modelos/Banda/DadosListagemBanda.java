@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.Modelos.Banda;
+package musicasstream.bibliotecademusicas.domain.Modelos.Banda;
 
 public record DadosListagemBanda(Long id, String nome, Estilo estilo) {
 

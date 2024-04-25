@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.Modelos.Banda;
+package musicasstream.bibliotecademusicas.domain.Modelos.Banda;
 
 import jakarta.persistence.*;
 import lombok.*;
