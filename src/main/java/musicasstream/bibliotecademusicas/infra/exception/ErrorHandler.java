@@ -1,6 +1,7 @@
-package musicasstream.bibliotecademusicas.infra;
+package musicasstream.bibliotecademusicas.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import musicasstream.bibliotecademusicas.infra.ResourceNotFoundException;
 import org.apache.logging.log4j.message.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
