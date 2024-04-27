@@ -1,7 +1,7 @@
 package musicasstream.bibliotecademusicas.controller.Banda;
 
 import jakarta.validation.Valid;
-import musicasstream.bibliotecademusicas.domain.Modelos.Banda.*;
+import musicasstream.bibliotecademusicas.domain.Banda.*;
 import musicasstream.bibliotecademusicas.infra.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
