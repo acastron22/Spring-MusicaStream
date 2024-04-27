@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.domain.Modelos;
+package musicasstream.bibliotecademusicas.domain;
 
 public class Musica {
 }
