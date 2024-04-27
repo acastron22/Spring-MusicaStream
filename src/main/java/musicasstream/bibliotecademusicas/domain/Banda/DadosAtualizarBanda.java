@@ -1,6 +1,5 @@
-package musicasstream.bibliotecademusicas.domain.Modelos.Banda;
+package musicasstream.bibliotecademusicas.domain.Banda;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record DadosAtualizarBanda(

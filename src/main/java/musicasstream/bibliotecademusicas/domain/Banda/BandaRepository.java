@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.domain.Modelos.Banda;
+package musicasstream.bibliotecademusicas.domain.Banda;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
