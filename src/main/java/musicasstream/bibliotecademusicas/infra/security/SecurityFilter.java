@@ -36,7 +36,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var subject = tokenService.getSubject(tokenJWT);
                 var usuario = repository.findByLogin(subject);
                 if (usuario == null) {
-                    throw new RuntimeException("Token JWT inválido");
+                    throw new RuntimeException("Usuário inexistente");
                 }
                 var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
                         usuario.getAuthorities());
@@ -44,12 +44,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request, response);
             } catch (JWTVerificationException e) {
-                sendUnauthorizedResponse(response, "Token inválido ou expirado");
+                sendForbidenResponse(response, "Token inválido ou expirado");
             } catch(RuntimeException e) {
-                sendUnauthorizedResponse(response, "Token JWT inválido");
+                sendForbidenResponse(response, "Token JWT inválido");
             }
         } else {
-            sendUnauthorizedResponse(response, "Usuário não autenticado");
+            sendForbidenResponse(response, "Usuário não autenticado");
         }
     }
 
@@ -70,7 +70,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         return request.getRequestURI().equals("/login");
     }
 
-    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+    private void sendForbidenResponse(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 status code
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
