@@ -30,19 +30,21 @@ public class SecurityFilter extends OncePerRequestFilter {
         // é desse cabeçalho então que vamos receber o token
         var tokenJWT = recuperarToken(request);
 
-        if (tokenJWT != null) {
-            // se tenho o cabeçalho, então faço a validação do token, se nao tenho, ele vai e segue o fluxo do filterChain
+        if (isLoginRequest(request)) {
+            filterChain.doFilter(request, response);
+        } else if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
-            
-            // para forçar a autenticação
             var usuario = repository.findByLogin(subject);
-            // usuário está recuperado
-
-            //vamos forçar pro string agora reconhecer e aceitar esse usuário
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, 
-                    usuario.getAuthorities());
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            // agora sim o spring vai considerar que o usuário está logado
+
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\": \"Usuário não autenticado\"}");
+            return;
         }
         
         
@@ -61,6 +63,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
 
+    private boolean isLoginRequest(HttpServletRequest request) {
+        
+        return request.getRequestURI().equals("/login");
     }
 }
