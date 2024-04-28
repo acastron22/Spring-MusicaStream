@@ -1,5 +1,6 @@
 package musicasstream.bibliotecademusicas.infra.security;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,36 +24,35 @@ public class SecurityFilter extends OncePerRequestFilter {
     private UsuarioRepository repository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("chamando filtro");
-
-        // o envio do token é feito pelo cabeçalho da requisão HTTP, e o cabeçalho se chama 'Authorization'
-        // é desse cabeçalho então que vamos receber o token
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException  {
+        
         var tokenJWT = recuperarToken(request);
 
         if (isLoginRequest(request)) {
             filterChain.doFilter(request, response);
         } else if (tokenJWT != null) {
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findByLogin(subject);
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                var subject = tokenService.getSubject(tokenJWT);
+                var usuario = repository.findByLogin(subject);
+                if (usuario == null) {
+                    throw new RuntimeException("Token JWT inválido");
+                }
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
+                        usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            filterChain.doFilter(request, response);
+                filterChain.doFilter(request, response);
+            } catch (JWTVerificationException e) {
+                sendUnauthorizedResponse(response, "Token inválido ou expirado");
+            } catch(RuntimeException e) {
+                sendUnauthorizedResponse(response, "Token JWT inválido");
+            }
         } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"message\": \"Usuário não autenticado\"}");
-            return;
+            sendUnauthorizedResponse(response, "Usuário não autenticado");
         }
-        
-        
-        filterChain.doFilter(request, response);
-        // o filter request é o meu próximo filtro q preciso chamar, da classe FilterChain, passando o request e o response
-        // é dessa forma q eu garanto q está chamando o próximo filtro
-
     }
+
     private String recuperarToken(HttpServletRequest request) {
 
         var authorizationHeader = request.getHeader("Authorization");
@@ -68,5 +68,12 @@ public class SecurityFilter extends OncePerRequestFilter {
     private boolean isLoginRequest(HttpServletRequest request) {
         
         return request.getRequestURI().equals("/login");
+    }
+
+    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 status code
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"message\": \"" + message + "\"}");
     }
 }
