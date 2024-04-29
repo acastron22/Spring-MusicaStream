@@ -1,9 +1,9 @@
-package musicasstream.bibliotecademusicas.domain.Avaliacao;
+package musicasstream.bibliotecademusicas.domain.avaliacao;
 
 
 import jakarta.persistence.*;
 import lombok.*;
-import musicasstream.bibliotecademusicas.domain.Banda.Banda;
+import musicasstream.bibliotecademusicas.domain.banda.Banda;
 
 @Table(name = "bandas_avaliacao")
 @Entity(name = "Banda_Avaliacao")

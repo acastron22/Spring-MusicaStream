@@ -1,9 +1,9 @@
-package musicasstream.bibliotecademusicas.controller.Banda;
+package musicasstream.bibliotecademusicas.controller.banda;
 
 import jakarta.validation.Valid;
-import musicasstream.bibliotecademusicas.domain.Avaliacao.AvaliacaoDeBanda;
-import musicasstream.bibliotecademusicas.domain.Avaliacao.DadosAvaliacaoBanda;
-import musicasstream.bibliotecademusicas.domain.Banda.*;
+import musicasstream.bibliotecademusicas.domain.avaliacao.AvaliacaoDeBanda;
+import musicasstream.bibliotecademusicas.domain.avaliacao.DadosAvaliacaoBanda;
+import musicasstream.bibliotecademusicas.domain.banda.*;
 import musicasstream.bibliotecademusicas.infra.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,13 +23,12 @@ public class BandaController {
     @GetMapping
     public ResponseEntity<Page<DadosListagemBanda>> listaDeBandas(Pageable paginacao) {
 
-
         var page = repository.findAllByExcluidoFalse(paginacao).map(DadosListagemBanda::new);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity bandaEspecifica(@PathVariable Long id) {
+    public ResponseEntity<DadosDetalhamentoBanda> bandaEspecifica(@PathVariable Long id) {
         Banda banda = repository.findById(id).orElseThrow(() 
                 -> new ResourceNotFoundException("Banda não encontrada"));
         return ResponseEntity.ok(new DadosDetalhamentoBanda(banda));
@@ -37,8 +36,8 @@ public class BandaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity criarBanda(@RequestBody @Valid DadosCadastroBanda dados,
-                                     UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DadosDetalhamentoBanda> criarBanda(@RequestBody @Valid DadosCadastroBanda dados,
+                                                             UriComponentsBuilder uriBuilder) {
         var banda = new Banda(dados);
         repository.save(banda);
 
@@ -49,7 +48,7 @@ public class BandaController {
 
     @PostMapping("/avaliacao/{id}")
     @Transactional
-    public ResponseEntity AvaliarBanda(@PathVariable Long id, @RequestBody @Valid 
+    public ResponseEntity<DadosDetalhamentoBanda> AvaliarBanda(@PathVariable Long id, @RequestBody @Valid
                                            DadosAvaliacaoBanda dados) {
         
         var banda = repository.findById(id)
@@ -69,7 +68,7 @@ public class BandaController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody DadosAtualizarBanda dados) {
+    public ResponseEntity<DadosDetalhamentoBanda> atualizar(@RequestBody DadosAtualizarBanda dados) {
         var banda = repository.getReferenceById(dados.id());
         banda.atualizarBanda(dados);
 
@@ -78,7 +77,7 @@ public class BandaController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
+    public ResponseEntity<?> excluir(@PathVariable Long id) {
         var banda = repository.getReferenceById(id);
 
         banda.excluirBanda();

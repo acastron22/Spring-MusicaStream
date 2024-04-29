@@ -1,8 +1,8 @@
-package musicasstream.bibliotecademusicas.domain.Banda;
+package musicasstream.bibliotecademusicas.domain.banda;
 
 import jakarta.persistence.*;
 import lombok.*;
-import musicasstream.bibliotecademusicas.domain.Avaliacao.AvaliacaoDeBanda;
+import musicasstream.bibliotecademusicas.domain.avaliacao.AvaliacaoDeBanda;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ public class Banda {
         this.estilo = dados.estilo();
         this.excluido = false;
     }
-
 
     public void atualizarBanda(DadosAtualizarBanda dados) {
         

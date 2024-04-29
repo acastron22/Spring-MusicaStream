@@ -1,4 +1,4 @@
-package musicasstream.bibliotecademusicas.domain.Avaliacao;
+package musicasstream.bibliotecademusicas.domain.avaliacao;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
